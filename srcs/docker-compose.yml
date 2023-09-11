@@ -1,0 +1,39 @@
+version: "1"
+services:
+  nginx:
+    container_name: nginx
+    # image: debian:bullseye
+    image: nginx
+    build:
+      context: ./requirements/nginx
+    ports:
+      - "443:443"
+      # - "9000:9000"
+    # restart: always
+    networks:
+      - inception-network
+    init: true
+  # frontend:
+  #   container_name: frontend
+  #   volumes:
+  #     - home/sguilher/data:./wordpress/app  # ?
+  #   ports:
+  #     - "9000:9000"
+  #     - "3306:3306"
+  #   restart: always
+  #   depends_on:
+  #     - database
+  #   networks:
+  #     - inception-network
+  # database:
+  #   container_name: database
+  #   volumes:
+  #     - home/sguilher/data:./mariadb  # ?
+  #   ports:
+  #     - "3306:3306"
+  #   restart: always
+  #   networks:
+  #     - inception-network
+
+networks:
+  inception-network:
