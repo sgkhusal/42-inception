@@ -29,7 +29,7 @@ COPY ./conf/sguilher.conf /etc/nginx/conf.d
 
 EXPOSE 443
 
-# STOPSIGNAL SIGQUIT
+STOPSIGNAL SIGQUIT
 
 # Your containers musn’t be started with a command running an infinite
 # loop. Thus, this also applies to any command used as entrypoint, or

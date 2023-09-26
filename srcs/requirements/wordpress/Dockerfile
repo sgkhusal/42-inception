@@ -6,4 +6,8 @@ RUN apt update -y && apt upgrade -y
 RUN apt install php-fpm -y
 RUN apt install wordpress -y
 
-CMD [bash]
+EXPOSE 9000
+
+STOPSIGNAL SIGQUIT
+
+CMD [ "sh", "-c", "sleep infinity" ]
