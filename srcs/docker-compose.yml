@@ -1,5 +1,7 @@
 version: "1"
+
 services:
+
   nginx:
     container_name: nginx
     image: nginx:sguilher
@@ -7,32 +9,38 @@ services:
       context: ./requirements/nginx
     ports:
       - 443:443
-      # - "9000:9000"
     restart: unless-stopped
     networks:
       - inception-network
     init: true
-  # wordepress:
-  #   container_name: wordpress
-  #   volumes:
-  #     - home/sguilher/data:./wordpress/app  # ?
-  #   ports:
-  #     - "9000:9000"
-  #     - "3306:3306"
-  #   restart: unless-stopped
-  #   depends_on:
-  #     - database
-  #   networks:
-  #     - inception-network
-  # mariadb:
-  #   container_name: mariadb
-  #   volumes:
-  #     - home/sguilher/data:./mariadb  # ?
-  #   ports:
-  #     - "3306:3306"
-  #   restart: unless-stopped
-  #   networks:
-  #     - inception-network
+    depends_on:
+      - wordepress
+
+  wordepress:
+    container_name: wordpress
+    image: wordpress:sguilher
+    build:
+      context: ./requirements/wordpress
+    # volumes:
+    #   - home/sguilher/data:./requirements/wordpress/app  # ?
+    restart: unless-stopped
+    depends_on:
+      - mariadb
+    networks:
+      - inception-network
+    init: true
+
+  mariadb:
+    container_name: mariadb
+    image: mariadb:sguilher
+    build:
+      context: ./requirements/mariadb
+    # volumes:
+    #   - home/sguilher/data:./requirements/mariadb  # ?
+    restart: unless-stopped
+    networks:
+      - inception-network
+    init: true
 
 networks:
   inception-network:
