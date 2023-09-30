@@ -1,4 +1,4 @@
-version: "1"
+version: "3"
 
 services:
 
@@ -14,18 +14,26 @@ services:
       - inception-network
     init: true
     depends_on:
-      - wordepress
+      - wordpress
+      # wordpress:
+      #   condition: service_started
+    # environment:
+      # - VAR=value
+    #   - COMPOSE_PROJECT_NAME
+    # command: echo "I'm running ${COMPOSE_PROJECT_NAME}"
 
-  wordepress:
+  wordpress:
     container_name: wordpress
     image: wordpress:sguilher
     build:
       context: ./requirements/wordpress
-    # volumes:
-    #   - home/sguilher/data:./requirements/wordpress/app  # ?
+    volumes:
+      - wordpress:/var/www
     restart: unless-stopped
     depends_on:
       - mariadb
+      # mariadb:
+      #   condition: service_started
     networks:
       - inception-network
     init: true
@@ -35,8 +43,9 @@ services:
     image: mariadb:sguilher
     build:
       context: ./requirements/mariadb
-    # volumes:
-    #   - home/sguilher/data:./requirements/mariadb  # ?
+    volumes:
+      - mariadb:/var/lib/mysql
+    env_file: .env
     restart: unless-stopped
     networks:
       - inception-network
@@ -44,3 +53,22 @@ services:
 
 networks:
   inception-network:
+    driver: bridge # default
+    name: inception-network
+
+# create the volumes to be used
+volumes:
+  mariadb:
+    # the volume will be created in the local file system - default, not necessary
+    driver: local
+    driver_opts:
+      type: none # it is not associated with any specific driver type
+      # 'o' and 'device' are used together
+      o: bind # specifieds that the volume should be bound to a directory in host machine
+      device: /home/sguilher/data/mariadb # the directory to bind the volume
+  wordpress:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/sguilher/data/wordpress

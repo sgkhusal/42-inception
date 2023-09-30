@@ -1,6 +1,7 @@
 DOCKER_COMPOSE_FILE = ./srcs/docker-compose.yml
 
-VOLUMES_DIR = /home/sguilher/data
+MY_DIR = /home/sguilher
+VOLUMES_DIR = $(MY_DIR)/data
 
 RM_DIR =	rm -rf
 
@@ -22,8 +23,9 @@ log-wordpress:
 
 
 setup:
-	sudo mkdir -p $(VOLUMES_DIR)
-	sudo chown -R ${USER} $(VOLUMES_DIR)
+	sudo mkdir -p $(MY_DIR)
+	sudo chown -R ${USER} $(MY_DIR)
+	mkdir -p $(VOLUMES_DIR)
 	mkdir -p $(VOLUMES_DIR)/mariadb
 	mkdir -p $(VOLUMES_DIR)/wordpress
 
