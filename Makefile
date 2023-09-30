@@ -6,11 +6,11 @@ VOLUMES_DIR = $(MY_DIR)/data
 RM_DIR =	rm -rf
 
 up:	setup
-	docker-compose -f $(DOCKER_COMPOSE_FILE) up
+	docker-compose -f $(DOCKER_COMPOSE_FILE) --project-name inception up
 # -f or --file: docker compose file
 
 down:
-	docker-compose -f $(DOCKER_COMPOSE_FILE) down
+	docker-compose -f $(DOCKER_COMPOSE_FILE) --project-name inception down
 
 logs:
 	docker-compose -f $(DOCKER_COMPOSE_FILE) logs -f

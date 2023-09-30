@@ -28,7 +28,7 @@ services:
     build:
       context: ./requirements/wordpress
     volumes:
-      - wordpress:/var/www
+      - wordpress:/var/www/wordpress
     restart: unless-stopped
     depends_on:
       - mariadb

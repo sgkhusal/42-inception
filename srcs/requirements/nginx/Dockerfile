@@ -25,7 +25,10 @@ RUN openssl req -batch -x509 -sha256 -nodes \
 	-out /etc/ssl/certs/sguilher-selfsigned.crt \
 	-subj "/C=BR/ST=SP/L=SP/O=42/OU=sguilher/CN=sguilher.42.fr"
 
-COPY ./conf/sguilher.conf /etc/nginx/conf.d
+COPY ./conf/nginx.conf /etc/nginx/conf.d
+# COPY ./conf/nginx.conf /etc/nginx/nginx.conf
+# By default, the configuration file is named nginx.conf and placed in the
+# directory /usr/local/nginx/conf, /etc/nginx, or /usr/local/etc/nginx
 
 EXPOSE 443
 
