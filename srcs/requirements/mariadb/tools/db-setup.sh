@@ -1,6 +1,7 @@
 #!/bin/bash
 
-service mariadb start
+# service mariadb start
+myslqd
 
 DB_PATH=/var/lib/mysql/$DB_NAME
 
@@ -9,6 +10,7 @@ if [ -d "$DB_PATH" ]; then
 else
 	echo "Running mysql secure installation"
 	mysql_secure_installation << EOF
+
 $DB_ROOT_PASSWORD
 n
 n
@@ -30,3 +32,18 @@ EOF
 	# mysqladmin -uroot -psenha shutdown;
 	service mariadb stop
 fi
+
+# mariadb
+#     2  apt install mariadb-client
+#     3  mariadb
+#     4  mariadb -h localhost
+#     5  mariadb -h mariadb
+#     6  mariadb -h mariadb -u root
+
+# nginx:
+# apt install mariadb-server
+# mariadb -h mariadb -u user42 -puser42 -P 3306
+
+# CREATE USER 'user42'@'%' IDENTIFIED BY 'user42';
+# GRANT ALL PRIVILEGES ON *.* TO 'user42'@'%';
+# FLUSH PRIVILEGES;
