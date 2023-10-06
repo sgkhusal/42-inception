@@ -1,7 +1,7 @@
-[mysqld]
+[mariadb]
 
 # skip-networking: disabled TCP/IP networking
-skip-networking=0
+# skip-networking=0
 
 # Allow server to accept connections on all interfaces.
 bind-address=0.0.0.0

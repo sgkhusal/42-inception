@@ -1,8 +1,7 @@
 FROM debian:bullseye
 
 # RUN apt update -y && apt upgrade -y
-RUN apt update -y
-RUN apt install mariadb-server -y
+RUN apt update -y && apt install mariadb-server -y
 
 # will be set in another place
 # ENV DB_NAME=inception
@@ -16,24 +15,27 @@ RUN apt install mariadb-server -y
 # COPY ./conf/my.cnf /etc/mysql/my.cnf
 # ~/.my.cnf is the last file readed for configs
 # it overrides any previously defined option
-RUN echo "\n[mariadb]\nbind-address=0.0.0.0\nport=3306\n" >> /etc/mysql/my.cnf
+COPY ./conf/my2.cnf .
+RUN cat my2.cnf >> /etc/mysql/my.cnf && rm my2.cnf
+# RUN echo "\n[mariadb]\nbind-address=0.0.0.0\nport=3306\n" >> /etc/mysql/my.cnf
 # RUN echo "socket=/var/lib/mysql/mysql.sock\n" >> /etc/mysql/my.cnf
 
 RUN mkdir /run/mysqld
 RUN chmod 777 /run/mysqld
 # RUN chown mysql:mysql
-# check right permissions - adicionar mysql no grupo correto
+# check right permissions - adicionar mysql no grupo correto - grupo mysql
 
 
-# COPY ./tools/db-setup.sh ./db-setup.sh
-# RUN chmod +x ./db-setup.sh
-# RUN ./db-setup.sh
+COPY ./tools/db-setup.sh .
+RUN chmod +x ./db-setup.sh
+RUN ./db-setup.sh
 
 EXPOSE 3306
 
 STOPSIGNAL SIGQUIT
 
 # ensure that db server starts with the necessary safety checks and configs
-# CMD [ "mysqld_safe" ]
-CMD [ "mysqld" ]
+# and also with mariadb in foreground
+CMD [ "mysqld_safe" ]
+# CMD [ "mysqld" ]
 # CMD [ "sh", "-c", "sleep infinity" ]

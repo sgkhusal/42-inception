@@ -30,4 +30,8 @@ setup:
 	mkdir -p $(VOLUMES_DIR)/wordpress
 
 fclean:
-	$(RM_DIR) $(VOLUMES_DIR)
+# docker rm nginx && docker rm mariadb && docker rm wordpress
+# docker volume rm inception_mariadb && docker volume rm inception_wordpress
+# docker rmi nginx:sguilher && docker rmi mariadb:sguilher && docker rmi wordpress:sguilher
+# docker image prune -f
+	sudo $(RM_DIR) $(VOLUMES_DIR)
