@@ -1,7 +1,10 @@
 FROM debian:bullseye
+# FROM debian:bullseye-slim
 
-# RUN apt update -y && apt upgrade -y
-RUN apt update -y && apt install mariadb-server -y
+RUN apt update -y && apt install -y mariadb-server
+	# procps \
+	# vim \
+	# mariadb-server
 
 # will be set in another place
 # ENV DB_NAME=inception
@@ -33,6 +36,7 @@ RUN ./db-setup.sh
 EXPOSE 3306
 
 STOPSIGNAL SIGQUIT
+# STOPSIGNAL SIGTERM
 
 # ensure that db server starts with the necessary safety checks and configs
 # and also with mariadb in foreground

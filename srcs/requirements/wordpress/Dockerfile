@@ -19,20 +19,21 @@ WORKDIR /var/www/wordpress/
 
 # Fast process manager (php-fpm), php-mysql, mariadb-client and wget
 # --no-install-recommends
-# RUN apt update -y && apt upgrade -y
 RUN apt update -y && apt install -y \
-	php-fpm php-mysql mariadb-client wget
+	procps \
+	vim \
+	php-fpm \
+	php-mysql \
+	mariadb-client \
+	wget
 	# > install_logs 2> install_errors_log - parece não criar os arquivos...
-# RUN DEBIAN_FRONTEND=noninteractive apt install -y php-fpm
-# RUN DEBIAN_FRONTEND=noninteractive apt install -y php-mysql
-# RUN apt install -y mariadb-client
-# RUN DEBIAN_FRONTEND=noninteractive apt install -y wget
 # to search:
 # WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
 # debconf: delaying package configuration, since apt-utils is not installed
 
 
-# Replace the default PHP-FPM listen location ( which is a local socket ) with port 9000 for the php-fpm container to be able to communicate with nginx
+# Replace the default PHP-FPM listen location ( which is a local socket ) with
+# port 9000 for the php-fpm container to be able to communicate with nginx
 # .default → make a backup of the original conf
 # [0-9]* → glob pattern to match any php version
 # RUN sed -i.default "/^listen\s=.*/c\listen = 0.0.0.0:9000" \
