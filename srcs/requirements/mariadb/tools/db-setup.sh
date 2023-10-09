@@ -38,12 +38,14 @@ EOF
 # Reload privilege tables now? (y)
 
 	echo "Creating database $DB_NAME..."
-	mariadb -u root -p $DB_ROOT_PASSWORD -e << EOF
+	cat << EOF > user-conf
 CREATE DATABASE IF NOT EXISTS $DB_NAME;
 CREATE USER '$DB_USER'@'%' IDENTIFIED BY '$DB_USER_PASSWORD';
 GRANT ALL PRIVILEGES ON *.* TO '$DB_USER'@'%';
 FLUSH PRIVILEGES;
 EOF
+	mariadb -u root -p $DB_ROOT_PASSWORD < user-conf
+	rm user-conf
 # GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'%';
 # ALTER USER 'root'@'localhost' IDENTIFIED BY '$DB_ROOT_PASSWORD';
 
