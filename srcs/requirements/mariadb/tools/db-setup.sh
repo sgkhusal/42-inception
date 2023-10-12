@@ -5,11 +5,6 @@ service mariadb start
 # start mariadb on foreground
 # myslqd
 
-DB_NAME="inception"
-DB_ROOT_PASSWORD="password"
-DB_USER="user42"
-DB_USER_PASSWORD="user42"
-
 DB_PATH="/var/lib/mysql/$DB_NAME"
 
 if [ -d "$DB_PATH" ]; then

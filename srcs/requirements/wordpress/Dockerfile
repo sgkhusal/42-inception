@@ -14,9 +14,6 @@ FROM debian:bullseye
 # disable "debconf: unable to initialize frontend: Dialog" message during build
 ARG DEBIAN_FRONTEND=noninteractive
 
-# Set the working directory to /var/www/wordpress ( Where wordpress will be installed )
-WORKDIR /var/www/wordpress/
-
 # Fast process manager (php-fpm), php-mysql, mariadb-client and wget
 # --no-install-recommends
 RUN apt update -y && apt install -y \
@@ -31,14 +28,12 @@ RUN apt update -y && apt install -y \
 # WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
 # debconf: delaying package configuration, since apt-utils is not installed
 
-
-# Replace the default PHP-FPM listen location ( which is a local socket ) with
-# port 9000 for the php-fpm container to be able to communicate with nginx
-# .default → make a backup of the original conf
-# [0-9]* → glob pattern to match any php version
-# RUN sed -i.default "/^listen\s=.*/c\listen = 0.0.0.0:9000" \
-# 	/etc/php/[0-9]*.[0-9]*/fpm/pool.d/www.conf
+# Replace the default PHP-FPM listen location (a local socket) with
+# port 9000 to the wordpress container be able to communicate with nginx
 RUN  echo "listen = 9000" >> /etc/php/7.4/fpm/pool.d/www.conf
+
+# Set the working directory to where wordpress will be installed (volume)
+WORKDIR /var/www/wordpress/
 
 # Install Wordpress
 RUN wget https://wordpress.org/latest.tar.gz && \
@@ -47,11 +42,11 @@ RUN wget https://wordpress.org/latest.tar.gz && \
 	rm -rf wordpress && \
 	rm -rf latest.tar.gz
 
-# Configure wordpress to use the database created in the mariadb container
+# Configure wordpress to use the database
 RUN cp wp-config-sample.php wp-config.php && \
-	sed -i "s/database_name_here/inception/g" wp-config.php && \
-	sed -i "s/username_here/user42/g" wp-config.php && \
-	sed -i "s/password_here/user42/g" wp-config.php && \
+	sed -i "s/database_name_here/$DB_NAME/g" wp-config.php && \
+	sed -i "s/username_here/$DB_USER/g" wp-config.php && \
+	sed -i "s/password_here/$DB_USER_PASSWORD/g" wp-config.php && \
 	sed -i "s/localhost/mariadb/g" wp-config.php
 
 # Create the directory where php-fpm will store the pid file
