@@ -22,7 +22,8 @@ RUN apt update -y && apt install -y \
 	php-fpm \
 	php-mysql \
 	mariadb-client \
-	wget
+	wget \
+	&& apt clean && rm -rf /var/lib/apt/lists/*
 	# > install_logs 2> install_errors_log - parece não criar os arquivos...
 # to search:
 # WARNING: apt does not have a stable CLI interface. Use with caution in scripts.
@@ -32,15 +33,30 @@ RUN apt update -y && apt install -y \
 # port 9000 to the wordpress container be able to communicate with nginx
 RUN  echo "listen = 9000" >> /etc/php/7.4/fpm/pool.d/www.conf
 
+# Create the directory where php-fpm will store the pid file
+# and make alias to call php-fpm without specifying the version
+RUN mkdir -p /run/php \
+	&& ln -s /usr/sbin/php-fpm7.4 /usr/bin/php-fpm
+
 # Set the working directory to where wordpress will be installed (volume)
 WORKDIR /var/www/wordpress/
 
-# Install Wordpress
-RUN wget https://wordpress.org/latest.tar.gz && \
-	tar -xzf latest.tar.gz && \
-	mv wordpress/* . && \
-	rm -rf wordpress && \
-	rm -rf latest.tar.gz
+# install wp-cli and check if it is working
+RUN wget \
+	https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+	&& chmod +x wp-cli.phar \
+	&& mv wp-cli.phar /usr/local/bin/wp
+# wp --info
+
+# Download Wordpress with wp-cli
+RUN wp core download --path=/var/www/wordpress/ --allow-root --version=6.3.2
+
+# Download Wordpress (alternative)
+# RUN wget https://wordpress.org/latest.tar.gz && \
+# 	tar -xzf latest.tar.gz && \
+# 	mv wordpress/* . && \
+# 	rm -rf wordpress && \
+# 	rm -rf latest.tar.gz
 
 # Configure wordpress to use the database
 RUN cp wp-config-sample.php wp-config.php && \
@@ -49,11 +65,16 @@ RUN cp wp-config-sample.php wp-config.php && \
 	sed -i "s/password_here/$DB_USER_PASSWORD/g" wp-config.php && \
 	sed -i "s/localhost/mariadb/g" wp-config.php
 
-# Create the directory where php-fpm will store the pid file
-RUN mkdir -p /run/php
+COPY ./tools/wp-install.sh .
+RUN chmod +x ./wp-install.sh
+# RUN ./wp-install.sh
+# RUN rm wp-install.sh
 
-# An alias to call php-fpm without specifying the version on the CMD below
-# RUN ln -s $(find /usr/sbin -name 'php-fpm*') /usr/bin/php-fpm
+# Install Wordpress with wp-cli
+# RUN wp core install --allow-root --url=$WP_URL --title="Blog about kittens" --admin_user=$WP_ADMIN --admin_password=$WP_ADMIN_PASSWORD --admin_email=$WP_ADMIN_EMAIL
+
+# create second user
+# RUN wp user create --allow-root $WP_USER $WP_USER_EMAIL --user_pass=$WP_USER_PASSWORD
 
 EXPOSE 9000
 
@@ -61,6 +82,6 @@ STOPSIGNAL SIGQUIT
 
 # Start php-fpm in foreground
 # CMD ["php-fpm", "-F"]
-CMD [ "/usr/sbin/php-fpm7.4", "-F" ]
+# CMD [ "/usr/sbin/php-fpm7.4", "-F" ]
 
-# CMD [ "sh", "-c", "sleep infinity" ]
+CMD [ "sh", "-c", "sleep infinity" ]

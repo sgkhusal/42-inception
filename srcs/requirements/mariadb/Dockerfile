@@ -1,37 +1,34 @@
 FROM debian:bullseye
 # FROM debian:bullseye-slim
 
-RUN apt update -y && apt install -y mariadb-server
-	# procps \
-	# vim \
-	# mariadb-server
+ARG DB_NAME
+ARG DB_ROOT
+ARG DB_ROOT_PASSWORD
+ARG DB_USER
+ARG DB_USER_PASSWORD
 
-# will be set in another place
-# ENV DB_NAME=inception
-# ENV DB_ROOT_PASSWORD=password
-# ENV DB_USER=user42
-# ENV DB_USER_PASSWORD=user42
+RUN apt update -y && apt install -y \
+	procps \
+	vim \
+	mariadb-server \
+	&& apt clean && rm -rf /var/lib/apt/lists/*
 
 # copy configuration files
-# COPY ./conf/mariadb.cnf /etc/mysql/mariadb.cnf
-# COPY ./conf/my.cnf ~/.my.cnf
-# COPY ./conf/my.cnf /etc/mysql/my.cnf
-# ~/.my.cnf is the last file readed for configs
-# it overrides any previously defined option
-COPY ./conf/my2.cnf .
-RUN cat my2.cnf >> /etc/mysql/my.cnf && rm my2.cnf
+COPY ./conf/my.cnf .
+RUN cat my.cnf >> /etc/mysql/my.cnf && rm my.cnf
 # RUN echo "\n[mariadb]\nbind-address=0.0.0.0\nport=3306\n" >> /etc/mysql/my.cnf
-# RUN echo "socket=/var/lib/mysql/mysql.sock\n" >> /etc/mysql/my.cnf
+# RUN echo "socket=/run/mysqld/mysqld.sock\n" >> /etc/mysql/my.cnf
 
-RUN mkdir /run/mysqld
-RUN chmod 777 /run/mysqld
-# RUN chown mysql:mysql
-# check right permissions - adicionar mysql no grupo correto - grupo mysql
-
+# create the directory used for storing the MariaDB socket file, which enables
+# local connections to the database server
+RUN mkdir -p /run/mysqld \
+    && chown mysql:mysql /run/mysqld/ \
+    && chmod 770 /run/mysqld/
 
 COPY ./tools/db-setup.sh .
 RUN chmod +x ./db-setup.sh
 RUN ./db-setup.sh
+# RUN rm db-setup.sh
 
 EXPOSE 3306
 
@@ -40,6 +37,7 @@ STOPSIGNAL SIGQUIT
 
 # ensure that db server starts with the necessary safety checks and configs
 # and also with mariadb in foreground
+# ENTRYPOINT [ "mysqld_safe" ]
 CMD [ "mysqld_safe" ]
 # CMD [ "mysqld" ]
 # CMD [ "sh", "-c", "sleep infinity" ]

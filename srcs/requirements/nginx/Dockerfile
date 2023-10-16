@@ -1,7 +1,10 @@
 FROM debian:bullseye-slim
 # check if i use slim
 
-RUN apt update -y && apt install nginx -y && apt install openssl -y
+RUN apt update -y && apt install -y \
+	nginx \
+	openssl \
+	&& apt clean && rm -rf /var/lib/apt/lists/*
 
 # Generate a self-signed ssl certificate for https
 # openssl -req - certificate request and certificate generating command:

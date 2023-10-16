@@ -46,9 +46,14 @@ services:
     image: mariadb:sguilher
     build:
       context: ./requirements/mariadb
+      args:
+        - DB_NAME
+        - DB_ROOT
+        - DB_ROOT_PASSWORD
+        - DB_USER
+        - DB_USER_PASSWORD
     volumes:
       - mariadb:/var/lib/mysql
-    env_file: .env
     restart: unless-stopped
     networks:
       - inception-network
