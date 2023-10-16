@@ -1,5 +1,8 @@
 FROM debian:bullseye-slim
-# check if i use slim
+
+ARG CERT
+ARG CERT_KEY
+ARG WP_DOMAIN
 
 RUN apt update -y && apt install -y \
 	nginx \
@@ -20,29 +23,24 @@ RUN apt update -y && apt install -y \
 RUN openssl req -batch -x509 -sha256 -nodes \
 	-newkey rsa:2048 \
 	-days 365 \
-	-keyout /etc/ssl/private/sguilher-selfsigned.key \
-	-out /etc/ssl/certs/sguilher-selfsigned.crt \
-	-subj "/C=BR/ST=SP/L=SP/O=42/OU=sguilher/CN=sguilher.42.fr"
+	-keyout $CERT_KEY \
+	-out $CERT \
+	-subj "/C=BR/ST=SP/L=SP/O=42/OU=sguilher/CN=$WP_DOMAIN"
 
 COPY ./conf/nginx.conf /etc/nginx/conf.d
 # COPY ./conf/nginx.conf /etc/nginx/nginx.conf
 # By default, the configuration file is named nginx.conf and placed in the
 # directory /usr/local/nginx/conf, /etc/nginx, or /usr/local/etc/nginx
+RUN sed -i "s#CERT_KEY#$CERT_KEY#" /etc/nginx/conf.d/nginx.conf && \
+	sed -i "s#CERT#$CERT#" /etc/nginx/conf.d/nginx.conf && \
+	sed -i "s#WP_DOMAIN#$WP_DOMAIN#" /etc/nginx/conf.d/nginx.conf
 
 EXPOSE 443
 
 STOPSIGNAL SIGQUIT
 
-# Your containers musn’t be started with a command running an infinite
-# loop. Thus, this also applies to any command used as entrypoint, or
-# used in entrypoint scripts. The following are a few prohibited hacky
-# patches: tail -f, bash, sleep infinity, while true
-# ENTRYPOINT ["nginx", "-g", "daemon off;"]
-# ENTRYPOINT ["nginx.sh"]
-# CMD ["nginx", "-g", "daemon off;"]
-
-# ENTRYPOINT [ "nginx" ]
-# CMD [ "-g", "daemon off;" ]
+ENTRYPOINT [ "nginx" ]
+CMD [ "-g", "daemon off;" ]
 
 # - nginx docker image
-CMD ["nginx", "-g", "daemon off;"]
+# CMD ["nginx", "-g", "daemon off;"]
