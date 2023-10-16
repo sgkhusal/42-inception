@@ -1,7 +1,7 @@
 FROM debian:bullseye
 # FROM debian:bullseye-slim
 
-ARG DB_NAME
+ARG DB_WP_NAME
 ARG DB_ROOT
 ARG DB_ROOT_PASSWORD
 ARG DB_USER

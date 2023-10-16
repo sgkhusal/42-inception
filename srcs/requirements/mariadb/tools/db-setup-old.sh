@@ -5,10 +5,10 @@ service mariadb start
 # start mariadb on foreground
 # myslqd
 
-DB_PATH="/var/lib/mysql/$DB_NAME"
+DB_PATH="/var/lib/mysql/$DB_WP_NAME"
 
 if [ -d "$DB_PATH" ]; then
-	echo "$DB_NAME database is already created"
+	echo "$DB_WP_NAME database is already created"
 else
 	echo "Running mysql secure installation"
 	mysql_secure_installation << EOF
@@ -32,19 +32,19 @@ EOF
 # Remove test database and access to it? (n)
 # Reload privilege tables now? (y)
 
-	echo "Creating database $DB_NAME..."
+	echo "Creating database $DB_WP_NAME..."
 	cat << EOF > user-conf
-CREATE DATABASE IF NOT EXISTS $DB_NAME;
+CREATE DATABASE IF NOT EXISTS $DB_WP_NAME;
 CREATE USER '$DB_USER'@'%' IDENTIFIED BY '$DB_USER_PASSWORD';
 GRANT ALL PRIVILEGES ON *.* TO '$DB_USER'@'%';
 FLUSH PRIVILEGES;
 EOF
 	mariadb -u root -p $DB_ROOT_PASSWORD < user-conf
 	rm user-conf
-# GRANT ALL PRIVILEGES ON $DB_NAME.* TO '$DB_USER'@'%';
+# GRANT ALL PRIVILEGES ON $DB_WP_NAME.* TO '$DB_USER'@'%';
 # ALTER USER 'root'@'localhost' IDENTIFIED BY '$DB_ROOT_PASSWORD';
 
-	# mysql -uroot -p $DB_ROOT_PASSWORD $DB_NAME < wordpress.sql ;
+	# mysql -uroot -p $DB_ROOT_PASSWORD $DB_WP_NAME < wordpress.sql ;
 	# mysqladmin -uroot -psenha shutdown;
 fi
 
