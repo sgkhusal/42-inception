@@ -32,12 +32,12 @@ RUN ./db-setup.sh
 
 EXPOSE 3306
 
-STOPSIGNAL SIGQUIT
+# STOPSIGNAL SIGQUIT
 # STOPSIGNAL SIGTERM
 
 # ensure that db server starts with the necessary safety checks and configs
 # and also with mariadb in foreground
-# ENTRYPOINT [ "mysqld_safe" ]
-CMD [ "mysqld_safe" ]
+ENTRYPOINT [ "mysqld" ]
+# CMD [ "mysqld_safe" ]
 # CMD [ "mysqld" ]
 # CMD [ "sh", "-c", "sleep infinity" ]

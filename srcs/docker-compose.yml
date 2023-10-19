@@ -61,7 +61,6 @@ services:
     restart: unless-stopped
     networks:
       - inception-network
-    init: true
 
 networks:
   inception-network:
