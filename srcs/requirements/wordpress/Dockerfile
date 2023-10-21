@@ -3,14 +3,14 @@ FROM debian:bullseye
 # disable "debconf: unable to initialize frontend: Dialog" message during build
 ARG DEBIAN_FRONTEND=noninteractive
 
-RUN apt update -y && apt install -y \
+RUN apt-get update -y && apt-get install -y \
 	procps \
 	vim \
 	php-fpm \
 	php-mysql \
 	mariadb-client \
 	wget \
-	&& apt clean && rm -rf /var/lib/apt/lists/*
+	&& apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN echo "\nlisten = 0.0.0.0:9000" >> /etc/php/7.4/fpm/pool.d/www.conf && \
 	echo "clear_env = no" >>/etc/php/7.4/fpm/pool.d/www.conf

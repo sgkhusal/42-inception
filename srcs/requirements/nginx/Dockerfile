@@ -4,12 +4,12 @@ ARG CERT
 ARG CERT_KEY
 ARG WP_DOMAIN
 
-RUN apt update -y && apt install -y \
+RUN apt-get update -y && apt-get install -y \
 	procps \
 	vim \
 	nginx \
 	openssl \
-	&& apt clean && rm -rf /var/lib/apt/lists/*
+	&& apt-get clean && rm -rf /var/lib/apt/lists/*
 
 RUN openssl req -batch -x509 -sha256 -nodes \
 	-newkey rsa:2048 \

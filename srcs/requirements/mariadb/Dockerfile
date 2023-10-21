@@ -6,11 +6,11 @@ ARG DB_ROOT_PASSWORD
 ARG DB_USER
 ARG DB_USER_PASSWORD
 
-RUN apt update -y && apt install -y \
+RUN apt-get update -y && apt-get install -y \
 	procps \
 	vim \
 	mariadb-server \
-	&& apt clean && rm -rf /var/lib/apt/lists/*
+	&& apt-get clean && rm -rf /var/lib/apt/lists/*
 
 COPY ./conf/my.cnf .
 RUN cat my.cnf >> /etc/mysql/my.cnf && rm my.cnf
