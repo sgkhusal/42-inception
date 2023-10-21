@@ -4,7 +4,7 @@ services:
 
   nginx:
     container_name: nginx
-    image: nginx:sguilher
+    image: nginx
     build:
       context: ./requirements/nginx
       args:
@@ -24,7 +24,7 @@ services:
 
   wordpress:
     container_name: wordpress
-    image: wordpress:sguilher
+    image: wordpress
     build:
       context: ./requirements/wordpress
     volumes:
@@ -39,7 +39,7 @@ services:
 
   mariadb:
     container_name: mariadb
-    image: mariadb:sguilher
+    image: mariadb
     build:
       context: ./requirements/mariadb
       args:
