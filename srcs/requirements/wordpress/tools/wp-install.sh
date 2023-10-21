@@ -22,8 +22,6 @@ if ! wp core is-installed --path=/var/www/wordpress/ --allow-root; then
         --path=/var/www/wordpress/ \
         --allow-root
 
-	# wp option update --allow-root --path=/var/www/wordpress blogdescription "$WP_SUB_TITLE"
-
 	# ensure plugins are updated
 	wp plugin update --all --allow-root --path=/var/www/wordpress
 

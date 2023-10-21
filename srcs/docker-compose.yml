@@ -21,12 +21,6 @@ services:
       - wordpress
     volumes:
       - wordpress:/var/www/wordpress
-      # wordpress:
-      #   condition: service_started
-    # environment:
-      # - VAR=value
-    #   - COMPOSE_PROJECT_NAME
-    # command: echo "I'm running ${COMPOSE_PROJECT_NAME}"
 
   wordpress:
     container_name: wordpress
@@ -39,8 +33,6 @@ services:
     restart: unless-stopped
     depends_on:
       - mariadb
-      # mariadb:
-      #   condition: service_started
     networks:
       - inception-network
     init: true
@@ -70,8 +62,8 @@ networks:
 # create the volumes to be used
 volumes:
   mariadb:
-    # the volume will be created in the local file system - default, not necessary
-    driver: local
+    # create volume in local file system
+    driver: local  # default
     driver_opts:
       type: none # it is not associated with any specific driver type
       # 'o' and 'device' are used together
