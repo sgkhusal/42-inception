@@ -1,0 +1,15 @@
+invoke-rc.d: could not determine current runlevel
+invoke-rc.d: policy-rc.d denied execution of stop.
+invoke-rc.d: could not determine current runlevel
+invoke-rc.d: policy-rc.d denied execution of start.
+
+https://stackoverflow.com/questions/46247032/how-to-solve-invoke-rc-d-policy-rc-d-denied-execution-of-start-when-building
+https://jpetazzo.github.io/2013/10/06/policy-rc-d-do-not-start-services-automatically/
+
+
+alerta do banco - root
+
+https://github.com/brianmario/mysql2/issues/407
+https://stackoverflow.com/questions/17813630/mysql-5-6-headaches-on-mac-osx/22773887#22773887
+https://stackoverflow.com/questions/21091850/error-2013-hy000-lost-connection-to-mysql-server-at-reading-authorization-pa
+https://mariadb.com/kb/en/mariadb-admin/

@@ -24,7 +24,10 @@ else
 	mariadb -e "GRANT ALL PRIVILEGES ON $DB_WP_NAME.* to '$DB_USER'@'%'"
 
 	echo "add a password to root user"
-	mariadb -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$DB_ROOT_PASSWORD';FLUSH PRIVILEGES"
+	mariadb -u root -p$DB_ROOT_PASSWORD -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$DB_ROOT_PASSWORD';FLUSH PRIVILEGES"
 
-	# mysqladmin -u root -p$DB_ROOT_PASSWORD shutdown
+	echo "stopping mariadb"
+	mariadb-admin -u root -p$DB_ROOT_PASSWORD -P 3306 shutdown
 fi
+
+echo "end of script"
