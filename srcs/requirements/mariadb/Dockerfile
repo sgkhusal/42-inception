@@ -6,6 +6,8 @@ ARG DB_ROOT_PASSWORD
 ARG DB_USER
 ARG DB_USER_PASSWORD
 
+ARG DEBIAN_FRONTEND=noninteractive
+
 RUN apt-get update -y && apt-get install -y \
 	procps \
 	vim \
